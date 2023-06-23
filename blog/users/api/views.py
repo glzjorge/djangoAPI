@@ -30,7 +30,7 @@ class UserView(APIView):
        # requiest.user.id
        user = User.objects.get(id=requiest.user.id)
        serializer = UserUpdateSerializer(user, requiest.data)
-       if serializer.is_valud(raise_Exception=True):
+       if serializer.is_valid(raise_exception=True):
            serializer.save()
            return Response(serializer.data)
        
