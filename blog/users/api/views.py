@@ -3,8 +3,9 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-#from users.models import User
-from users.api.serializers import UserRegisterSerializer,  UserSerializer
+
+from users.api.serializers import UserRegisterSerializer,  UserSerializer, UserUpdateSerializer
+from users.models import User
 
 class RegisterView(APIView):
     def post(self, request):
@@ -24,4 +25,14 @@ class UserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
-        
+    
+    def put(self,requiest):
+       # requiest.user.id
+       user = User.objects.get(id=requiest.user.id)
+       serializer = UserUpdateSerializer(user, requiest.data)
+       if serializer.is_valud(raise_Exception=True):
+           serializer.save()
+           return Response(serializer.data)
+       
+       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
